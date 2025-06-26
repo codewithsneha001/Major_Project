@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Certificate</title>
+    <script src="https://cdn.jsdelivr.net/npm/web3/dist/web3.min.js"></script>
+    <script src="app.js" defer></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="nav-container">
+        <div class="nav-box"><a href="home.html">Home</a></div>
+        <div class="nav-box"><a href="about.html">About Us</a></div>
+        <div class="nav-box"><a href="contact.html">Contact Us</a></div>
+    </div>
+    <div class="container">
+        <h1> Blockchain Enabled E-Certificate Verification with Steganographic Security</h1>
+        <h2>View Certificate</h2>
+        <label>Certificate ID: <input type="text" id="viewCertId" autocomplete="off"></label><br><br>
+        <button onclick="submitCertId()">Submit</button>
+
+        <script>
+            function submitCertId() {
+                const certId = document.getElementById("viewCertId").value.trim();
+                if (!certId) {
+                    alert("❌ Please enter a Certificate ID.");
+                    return;
+                }
+                window.location.href = `st_certificate.html?certId=${encodeURIComponent(certId)}`;
+            }
+        </script>
+
+    </div>
+</body>
+
+</html>

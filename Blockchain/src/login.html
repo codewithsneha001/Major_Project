@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Blockchain E-Certificate Verification</title>
+    <link rel="stylesheet" href="home_style.css">
+    <script>
+        // Function to get query parameter (role) from URL
+        function getRoleFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get("role") || "student"; // Default to "student" if not found
+        }
+
+        window.onload = function() {
+            document.getElementById("role").value = getRoleFromURL();
+        };
+    </script>
+</head>
+
+<body>
+
+    <!-- Navigation at Top Right -->
+    <div class="nav-container">
+        <div class="nav-box"><a href="home.html">Home</a></div>
+        <div class="nav-box"><a href="about.html">About Us</a></div>
+        <div class="nav-box"><a href="contact.html">Contact Us</a></div>
+    </div>
+
+    <!-- Login Form -->
+    <div class="container">
+        <h1>Blockchain Enabled E-Certificate Verification with Steganographic Security</h1>
+        <h1>Login</h1>
+        <form action="login.php" method="POST">
+            <input type="hidden" id="role" name="role">
+            <!-- Hidden input for role -->
+
+            <div class="form-group">
+                <label>Email:</label>
+                <input type="email" id="email" name="email" required><br>
+            </div>
+
+            <div class="form-group">
+                <label>Password:</label>
+                <input type="password" id="password" name="password" required><br>
+            </div>
+
+            <button type="submit">Login</button>
+            <button onclick="window.location.href='role.html'">Back</button>
+
+        </form>
+
+        <p>Forgot your password? <a href="forgot-password.html">Click here</a></p>
+        <p>New user? <a href="register.html">Register here</a></p>
+    </div>
+
+</body>
+
+</html>

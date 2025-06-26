@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Issue Certificate</title>
+    <script src="https://cdn.jsdelivr.net/npm/web3/dist/web3.min.js"></script>
+    <script src="app.js" defer></script>
+    <script>
+        function saveData() {
+            const userInput = document.getElementById("certId").value.trim();
+            localStorage.setItem("formData", userInput); // Store input in localStorage
+            window.location.href = "view_certificate.html"; // Redirect to second page
+        }
+    </script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="nav-container">
+        <div class="nav-box"><a href="home.html">Home</a></div>
+        <div class="nav-box"><a href="about.html">About Us</a></div>
+        <div class="nav-box"><a href="contact.html">Contact Us</a></div>
+    </div>
+    <div class="container">
+
+        <h1>Blockchain Enabled E-Certificate Verification with Steganographic Security</h1>
+        <h2>Issuing a Certificate</h2>
+        <form>
+            <label>Certificate ID: <input type="text" id="certId" autocomplete="off"></label><br>
+            <label>Student Name: <input type="text" id="studentName" autocomplete="off"></label><br>
+            <label>Course Name: <input type="text" id="courseName" autocomplete="off"></label><br>
+            <label>Issue Date: <input type="date" id="issueDate" autocomplete="off"></label><br>
+            <button type="button" onclick="issueCertificate()">Issue Certificate</button>
+        </form>
+        <button onclick="saveData()">View Certificate</button>
+    </div>
+</body>
+
+</html>

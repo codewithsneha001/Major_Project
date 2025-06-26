@@ -1,0 +1,106 @@
+/* General Styles */
+
+body {
+    font-family: Arial, sans-serif;
+    background-image: url('bg.webp');
+    /* Your background image */
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+
+/* Main Container */
+
+.container {
+    text-align: center;
+    background: rgba(203, 201, 197, 0.719);
+    /* Transparent White */
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    width: 60%;
+}
+
+.nav-container {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    display: flex;
+    gap: 15px;
+}
+
+.nav-box {
+    background: rgba(203, 201, 197, 0.719);
+    padding: 10px 15px;
+    border-radius: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.nav-box a {
+    color: #003366;
+    font-size: 16px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+
+/* Heading */
+
+
+/* h1 {
+    color: #003366;
+    margin-bottom: 20px;
+} */
+
+h1 {
+    font-size: 22px;
+    color: black;
+    margin-bottom: 10px;
+}
+
+.head {
+    font-size: 22px;
+    color: #003366;
+    margin-bottom: 10px;
+}
+
+
+/* Role Selection Section */
+
+.role-selection {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+}
+
+
+/* Role Card */
+
+.role-card {
+    background: rgba(255, 255, 255, 0.2);
+    /* Transparent White Box */
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    text-decoration: none;
+    color: black;
+    width: 150px;
+    transition: 0.3s;
+}
+
+.role-card img {
+    width: 80px;
+    height: 80px;
+    border-radius: 15px;
+}
+
+.role-card:hover {
+    background: rgba(255, 255, 255, 0.4);
+    /* Slightly more visible on hover */
+}

@@ -1,0 +1,101 @@
+/* General Styles */
+
+body {
+    font-family: Arial, sans-serif;
+    background-image: url('bg.webp');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+
+/* Centering the form */
+
+.nav-container {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    display: flex;
+    gap: 15px;
+}
+
+.nav-box {
+    background: rgba(203, 201, 197, 0.719);
+    padding: 10px 15px;
+    border-radius: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.nav-box a {
+    color: #003366;
+    font-size: 16px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.container {
+    text-align: center;
+    background: rgba(203, 201, 197, 0.719);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    width: 50%;
+}
+
+
+/* Main Heading */
+
+h1 {
+    font-size: 22px;
+    color: #003366;
+    margin-bottom: 10px;
+}
+
+
+/* Subheading */
+
+h2 {
+    font-size: 18px;
+    color: #006699;
+    margin-bottom: 20px;
+}
+
+
+/* Form styling */
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+label {
+    font-size: 16px;
+    margin: 10px 0;
+}
+
+input {
+    padding: 8px;
+    margin-left: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    background-color: #006699;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+button:hover {
+    background-color: #004d66;
+}

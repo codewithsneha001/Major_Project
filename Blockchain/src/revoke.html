@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revoke Certificate</title>
+    <script src="https://cdn.jsdelivr.net/npm/web3/dist/web3.min.js"></script>
+    <script src="app.js" defer></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="nav-container">
+        <div class="nav-box"><a href="home.html">Home</a></div>
+        <div class="nav-box"><a href="about.html">About Us</a></div>
+        <div class="nav-box"><a href="contact.html">Contact Us</a></div>
+    </div>
+    <div class="container">
+        <h1>Blockchain Enabled E-Certificate Verification with Steganographic Security</h1>
+        <h2>Revoke Certificate</h2>
+        
+        <label>Upload Certificate Image:
+            <input type="file" id="certificateFile" accept="image/png, image/jpeg">
+        </label><br><br>
+
+        <button onclick="extractCertificateID()">Revoke Certificate</button>
+        <p id="revokeResult"></p>
+        <button onclick="window.location.href='index.html'">Back</button>
+    </div>
+    <script>
+        function extractCertificateID() {
+            let input = document.getElementById("certificateFile");
+            let file = input.files[0];
+
+            if (!file) {
+                alert("Please select a certificate image first.");
+                console.warn("No file selected.");
+                return;
+            }
+
+            console.log("File selected:", file.name);
+
+            let reader = new FileReader();
+            reader.onload = (e) => {
+                console.log("FileReader loaded successfully.");
+
+                let img = new Image();
+                img.src = e.target.result;
+
+                img.onload = () => {
+                    console.log("Image loaded successfully.");
+
+                    let canvas = document.createElement("canvas");
+                    let ctx = canvas.getContext("2d");
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0);
+
+                    let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    let extractedCertID = decodeLSB(imageData).trim();
+
+                    console.log("Extracted Certificate ID:", extractedCertID);
+
+                    if (extractedCertID) {
+                        revokeCertificate(extractedCertID);
+                    } else {
+                        alert("Error: Could not extract a valid Identifier.");
+                        console.error("Failed to extract Certificate ID.");
+                    }
+                };
+            };
+
+            reader.onerror = () => {
+                console.error("Error reading file.");
+            };
+
+            reader.readAsDataURL(file);
+        }
+
+        function decodeLSB(imageData) {
+            let data = imageData.data;
+            let binaryMessage = "";
+
+            for (let i = 0; i < data.length; i += 4) {
+                binaryMessage += (data[i] & 1).toString();
+            }
+
+            let chars = binaryMessage.match(/.{1,8}/g);
+            let message = chars ? chars.map(bin => String.fromCharCode(parseInt(bin, 2))).join('') : "";
+            
+            console.log("Decoded LSB message:", message);
+            return message.split('\0')[0];
+        }
+
+    </script>
+</body>
+
+</html>

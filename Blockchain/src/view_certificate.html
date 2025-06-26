@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificate Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+    <style>
+      body {
+          font-family: "Poppins", Arial, sans-serif;
+          text-align: center;
+          background-color: #f4f4f4;
+          margin: 0;
+          padding: 20px;
+      }
+  
+      .certificate {
+          max-width: 90%;
+          width: 750px;
+          background: white;
+          padding: 30px 20px;
+          margin: 40px auto;
+          border: 4px solid #333;
+          border-radius: 10px;
+          box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+          position: relative;
+          box-sizing: border-box;
+      }
+  
+      .certificate h1 {
+          color: darkblue;
+          font-size: 2rem;
+          margin-bottom: 10px;
+      }
+  
+      .cert-details {
+          margin-top: 20px;
+          font-size: 1rem;
+          line-height: 1.6;
+          padding: 0 10px;
+      }
+  
+      .cert-details span {
+          font-weight: bold;
+          color: #222;
+      }
+  
+      .download-btn {
+          margin-top: 30px;
+          padding: 12px 24px;
+          background-color: darkblue;
+          color: white;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+          font-size: 1rem;
+          transition: background 0.3s ease;
+      }
+  
+      .download-btn:hover {
+          background-color: #002366;
+      }
+  
+      /* Responsive font scaling */
+      @media (max-width: 768px) {
+          .certificate {
+              padding: 20px 15px;
+          }
+  
+          .certificate h1 {
+              font-size: 1.6rem;
+          }
+  
+          .cert-details {
+              font-size: 0.95rem;
+          }
+  
+          .download-btn {
+              font-size: 0.95rem;
+              padding: 10px 20px;
+          }
+      }
+  
+      @media (max-width: 480px) {
+          .certificate {
+              padding: 15px 10px;
+          }
+  
+          .certificate h1 {
+              font-size: 1.4rem;
+          }
+  
+          .cert-details {
+              font-size: 0.9rem;
+          }
+  
+          .download-btn {
+              font-size: 0.9rem;
+              padding: 8px 16px;
+          }
+      }
+  </style>
+</head>
+
+<body onload="fetchCertificateData()">
+    <div id="certificate" class="certificate">
+        <h1>Certificate of Achievement</h1>
+        <p>This is to certify that</p>
+        <h2 id="certName">Loading...</h2>
+        <p>has successfully completed the course.</p>
+        <p class="cert-details">Course Name: <span id="courseName">Loading...</span></p>
+        <p class="cert-details">Issue Date: <span id="issueDate">Loading...</span></p>
+    </div>
+    <button class="download-btn" onclick="downloadCertificate()">Download Certificate</button>
+    <button class="download-btn" onclick="extractCertificateID()">Extract Certificate ID</button><br>
+    <button class="download-btn" onclick="window.location.href='index.html'">Back</button>
+
+    <script>
+        const contractAddress = "0xf8Ed9BD8c9CC5c7A91007943A10358D5504f9657";
+        const contractABI = [
+        {
+      "inputs": [],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "certId",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "studentName",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "courseName",
+          "type": "string"
+        }
+      ],
+      "name": "CertificateIssued",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "certId",
+          "type": "string"
+        }
+      ],
+      "name": "CertificateRevoked",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "admin",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "certId",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "studentName",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "courseName",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "issueDate",
+          "type": "string"
+        }
+      ],
+      "name": "issueCertificate",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "certId",
+          "type": "string"
+        }
+      ],
+      "name": "validateCertificate",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "certId",
+          "type": "string"
+        }
+      ],
+      "name": "revokeCertificate",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "certId",
+          "type": "string"
+        }
+      ],
+      "name": "getCertificate",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "studentName",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "courseName",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "issueDate",
+          "type": "string"
+        },
+        {
+          "internalType": "bool",
+          "name": "isValid",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    }
+];
+
+        let storedCertId = "";
+
+        async function fetchCertificateData() {
+            try {
+                if (!window.ethereum) {
+                    console.error("Ethereum provider not found. Please install MetaMask.");
+                    return;
+                }
+
+                const retrievedData = localStorage.getItem("formData");
+                if (!retrievedData) {
+                    console.error("Certificate ID not found in localStorage.");
+                    return;
+                }
+
+                storedCertId = retrievedData.trim();
+                const web3 = new Web3(window.ethereum);
+                await window.ethereum.request({
+                    method: "eth_requestAccounts"
+                });
+
+                const contract = new web3.eth.Contract(contractABI, contractAddress);
+
+                const certificate = await contract.methods.getCertificate(storedCertId).call();
+                if (!certificate || !certificate.studentName) {
+                    console.error("No certificate data found for ID:", storedCertId);
+                    return;
+                }
+
+                document.getElementById("certName").textContent = certificate.studentName;
+                document.getElementById("courseName").textContent = certificate.courseName;
+                document.getElementById("issueDate").textContent = certificate.issueDate;
+            } catch (error) {
+                console.error("Error fetching certificate from blockchain:", error);
+            }
+        }
+
+        function encodeLSB(imageData, message) {
+            let data = imageData.data;
+            let binaryMessage = message.split('').map(char => char.charCodeAt(0).toString(2).padStart(8, '0')).join('') + '00000000';
+            let msgIndex = 0;
+
+            for (let i = 0; i < data.length; i += 4) {
+                if (msgIndex < binaryMessage.length) {
+                    data[i] = (data[i] & 0xFE) | parseInt(binaryMessage[msgIndex], 2);
+                    msgIndex++;
+                } else {
+                    break;
+                }
+            }
+        }
+
+        function decodeLSB(imageData) {
+            let data = imageData.data;
+            let binaryMessage = "";
+
+            for (let i = 0; i < data.length; i += 4) {
+                binaryMessage += (data[i] & 1).toString();
+            }
+
+            let chars = binaryMessage.match(/.{1,8}/g);
+            let message = chars.map(bin => String.fromCharCode(parseInt(bin, 2))).join('');
+            return message.split('\0')[0];
+        }
+
+        function downloadCertificate() {
+            const certElement = document.getElementById("certificate");
+            setTimeout(() => {
+                html2canvas(certElement).then(canvas => {
+                    const ctx = canvas.getContext("2d");
+                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+                    if (!storedCertId) {
+                        console.error("Certificate ID not available.");
+                        return;
+                    }
+
+                    encodeLSB(imageData, storedCertId);
+                    ctx.putImageData(imageData, 0, 0);
+
+                    let link = document.createElement("a");
+                    link.href = canvas.toDataURL("image/png");
+                    link.download = "certificate.png";
+                    link.click();
+                });
+            }, 500);
+        }
+
+        function extractCertificateID() {
+            let input = document.createElement("input");
+            input.type = "file";
+            input.accept = "image/png";
+            input.onchange = (event) => {
+                let file = event.target.files[0];
+                if (!file) return;
+
+                let reader = new FileReader();
+                reader.onload = (e) => {
+                    let img = new Image();
+                    img.src = e.target.result;
+                    img.onload = () => {
+                        let canvas = document.createElement("canvas");
+                        let ctx = canvas.getContext("2d");
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+                        ctx.drawImage(img, 0, 0);
+
+                        let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                        let extractedCertID = decodeLSB(imageData).trim();
+                        if (!extractedCertID) {
+                            alert("Error: Could not extract a valid Certificate ID.");
+                        } else {
+                            alert("Extracted Certificate ID: " + extractedCertID);
+                        }
+                    };
+                };
+                reader.readAsDataURL(file);
+            };
+            input.click();
+        }
+    </script>
+</body>
+
+</html>
